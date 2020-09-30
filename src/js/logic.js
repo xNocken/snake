@@ -1,27 +1,30 @@
+import $ from 'jquery';
 import globals from './globals';
 import utils from './utils';
 
 export default () => {
+  if (globals.dirArr.length) {
+    globals.dir = globals.dirArr.shift();
+  }
+
   const {
     pos,
     dir,
     arraySize,
     grid,
+    snackCount,
   } = globals;
-
-  if (!utils.getSnackCount(grid)) {
-    const x = Math.floor(Math.random() * arraySize);
-    const y = Math.floor(Math.random() * arraySize);
-    globals.grid[x][y] = 1;
-  }
 
   globals.pos.unshift([
     (pos[0][0] + dir[0]) % arraySize,
     (pos[0][1] + dir[1]) % arraySize,
   ]);
 
-  if (globals.snackCount < globals.pos.length - 1) {
+  globals.posDir.unshift(dir);
+
+  if (snackCount < pos.length - 1) {
     globals.pos.pop();
+    globals.posDir.pop();
   }
 
   if (pos[0][0] < 0) {
@@ -35,5 +38,33 @@ export default () => {
   if (grid[pos[0][1]][pos[0][0]] === 1) {
     globals.snackCount += 1;
     globals.grid[pos[0][1]][pos[0][0]] = 0;
+  }
+
+  globals.pos.slice(1, globals.pos.length).forEach((bodyPos) => {
+    if (bodyPos[0] === globals.pos[0][0] && bodyPos[1] === globals.pos[0][1]) {
+      window.cancelAnimationFrame(globals.animationFrame);
+      $('#gameover').show();
+      $('#score').text(globals.snackCount);
+    }
+  });
+
+  while (utils.getSnackCount(grid) < globals.maxSnackCount && utils.getEmptyFields(globals.pos, grid).length) {
+    const emptyFields = utils.getEmptyFields(globals.pos, grid);
+    const index = Math.floor(Math.random() * emptyFields.length);
+    const [y, x] = emptyFields[index];
+
+    globals.grid[x][y] = 1;
+  }
+
+  if (globals.autoplay) {
+    if (globals.pos[0][0] === arraySize - 1 && !globals.ignore) {
+      globals.ignore = true;
+      globals.dirArr.push([0, 1], [-1, 0]);
+    } else if (globals.pos[0][0] === 0 && !globals.ignore) {
+      globals.ignore = true;
+      globals.dirArr.push([0, 1], [1, 0]);
+    } else {
+      globals.ignore = false;
+    }
   }
 };

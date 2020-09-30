@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake</title>
 </head>
+
 <body>
-    <script src="dist/app.js"></script>
-    <canvas height="1000" width="1000" id="canvas"></canvas>
+  <script src="dist/app.js"></script>
+  <canvas height="1000" width="1000" id="canvas"></canvas>
+
+  <div
+    style="background-color: rgba(255,255,255,100); display: none; position: absolute; top: 0;bottom: 0;right: 0;left: 0;"
+    id="gameover">
+    <div>Snacks: <span id="score"></span></div>
+    <a href>Restart</a>
+  </div>
 </body>
+
 </html>

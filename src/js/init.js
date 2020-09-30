@@ -8,19 +8,37 @@ export default () => {
   globals.grid = Array.from({ length: arraySize }).map(() => Array.from({ length: arraySize }).map(() => 0));
   global.globals = globals;
 
-  $(document).on('keydown', ({ key }) => {
-    switch (key) {
+  $(document).on('keydown', (event) => {
+    switch (event.key) {
       case 'w':
-        globals.dir = [0, -1];
+      case 'ArrowUp':
+        if ((globals.dirArr[globals.dirArr.length - 1] || globals.dir)[1] === 1 && globals.snackCount !== 0) {
+          break;
+        }
+        globals.dirArr.push([0, -1]);
+        event.preventDefault();
         break;
+      case 'ArrowLeft':
       case 'a':
-        globals.dir = [-1, 0];
+        if ((globals.dirArr[globals.dirArr.length - 1] || globals.dir)[0] === 1 && globals.snackCount !== 0) {
+          break;
+        }
+        globals.dirArr.push([-1, 0]);
         break;
+      case 'ArrowDown':
       case 's':
-        globals.dir = [0, 1];
+        if ((globals.dirArr[globals.dirArr.length - 1] || globals.dir)[1] === -1 && globals.snackCount !== 0) {
+          break;
+        }
+        globals.dirArr.push([0, 1]);
+        event.preventDefault();
         break;
       case 'd':
-        globals.dir = [1, 0];
+      case 'ArrowRight':
+        if ((globals.dirArr[globals.dirArr.length - 1] || globals.dir)[0] === -1 && globals.snackCount !== 0) {
+          break;
+        }
+        globals.dirArr.push([1, 0]);
         break;
       default:
     }
